@@ -2,18 +2,18 @@ import { useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const SizeDelta = () => {
+const MoveToPosition = () => {
   const { executeSingleAction } = useGameContext();
 
-  const [sizeDelta, setSizeDelta] = useState(10);
+  const [selectedPosition, setSelectedPosition] = useState("random");
 
-  const addActionToFlow = () => {
-    if (!sizeDelta) return;
+  const performAction = () => {
+    if (!selectedPosition) return;
 
     const currentAction = {
-      action: "changeSize",
+      action: "changePositionTo",
       params: {
-        sizeDelta,
+        selectedPosition,
       },
     };
 
@@ -22,9 +22,9 @@ const SizeDelta = () => {
 
   const handleDragStart = (e) => {
     const currentAction = {
-      action: "changeSize",
+      action: "changePositionTo",
       params: {
-        sizeDelta,
+        selectedPosition,
       },
     };
     const type = "actionData";
@@ -35,20 +35,22 @@ const SizeDelta = () => {
   return (
     <ActionItemButton
       className="bg-[#4C97FE]"
-      onClick={addActionToFlow}
+      onClick={performAction}
       draggable
       onDragStart={handleDragStart}
     >
-      <span>Change size by </span>
-      <input
-        type="number"
-        className="bg-[#fff] text-[#000] w-[36px] rounded-lg text-center hide-arrows focus:outline-none"
+      <span>Go to</span>
+      <select
+        className="bg-[#4C97FE] border-[#fff] border-[0.5px] rounded-md focus:outline-none"
+        value={selectedPosition}
+        onChange={(e) => setSelectedPosition(e.target.value)}
         onClick={(e) => e.stopPropagation()}
-        value={sizeDelta}
-        onChange={(e) => setSizeDelta(Number(e.target.value))}
-      />
+      >
+        <option value="random">Random position</option>
+        <option value="mousepointer">Mouse pointer</option>
+      </select>
     </ActionItemButton>
   );
 };
 
-export default SizeDelta;
+export default MoveToPosition;

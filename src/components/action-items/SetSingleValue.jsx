@@ -3,18 +3,16 @@ import { useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const ChangePositionDelta = ({ changeType = "xDelta" }) => {
+const SetSingleValue = ({ changeType = "x" }) => {
   const { executeSingleAction } = useGameContext();
 
-  const [delta, setDelta] = useState({ xDelta: 0, yDelta: 0, angleDelta: 0 });
+  const [val, setVal] = useState(0);
 
   const performAction = () => {
-    if (!(delta.xDelta || delta.yDelta || delta.angleDelta)) return;
-
     const currentAction = {
-      action: "changePositionDelta",
+      action: "changeValueTo",
       params: {
-        ...delta,
+        [changeType]: val,
       },
     };
 
@@ -23,9 +21,9 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
 
   const handleDragStart = (e) => {
     const currentAction = {
-      action: "changePositionDelta",
+      action: "changeValueTo",
       params: {
-        delta,
+        [changeType]: val,
       },
     };
     const type = "actionData";
@@ -34,13 +32,13 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
   };
 
   const getLabel = (changeType) => {
-    if (changeType === "xDelta") {
-      return "Change x";
+    if (changeType === "x") {
+      return "Set x to";
     }
-    if (changeType === "yDelta") {
-      return "Change y";
+    if (changeType === "y") {
+      return "Set y to";
     }
-    return "Turn";
+    return "Point in direction";
   };
 
   return (
@@ -50,19 +48,19 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
       draggable
       onDragStart={handleDragStart}
     >
-      <span>{getLabel(changeType)} by</span>
+      <span>{getLabel(changeType)}</span>
       <input
         type="number"
         className="bg-[#fff] text-[#000] w-[36px] rounded-lg text-center hide-arrows focus:outline-none"
         onClick={(e) => e.stopPropagation()}
-        value={delta[changeType]}
+        value={val}
         onChange={(e) => {
-          const deltaValue = Number(e.target.value);
-          setDelta((prev) => ({ ...prev, [changeType]: deltaValue }));
+          const inputValue = Number(e.target.value);
+          setVal(inputValue);
         }}
       />
     </ActionItemButton>
   );
 };
 
-export default ChangePositionDelta;
+export default SetSingleValue;

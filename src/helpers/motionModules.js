@@ -1,5 +1,5 @@
 function moveNSteps(params = {}) {
-  const currentSpriteInfo = this;
+  const { currentSpriteInfo } = this;
   const { x, y, angle } = currentSpriteInfo;
   const { steps } = params;
 
@@ -31,7 +31,6 @@ function glide(params = {}) {
   let frame = 0;
 
   function animate() {
-    // console.log("ANIMATE:", counter++);
     frame++;
     const progress = frame / frames;
     const newX = startX + deltaX * progress;
@@ -48,15 +47,13 @@ function glide(params = {}) {
 }
 
 function changeSize(params = {}) {
-  const currentSpriteInfo = this;
+  const { currentSpriteInfo } = this;
   const { sizeDelta } = params;
 
   if (isNaN(sizeDelta)) {
     console.error("sizeDelta is invalid number", params);
     return currentSpriteInfo;
   }
-
-  console.log("SIZE DELTA", sizeDelta);
 
   return {
     ...currentSpriteInfo,
@@ -66,7 +63,7 @@ function changeSize(params = {}) {
 }
 
 function changePositionDelta(params = {}) {
-  const currentSpriteInfo = this;
+  const { currentSpriteInfo } = this;
   const { angle, x, y } = currentSpriteInfo;
   const { angleDelta = 0, xDelta = 0, yDelta = 0 } = params;
 
@@ -83,6 +80,71 @@ function changePositionDelta(params = {}) {
   };
 }
 
-const actionModules = { moveNSteps, changeSize, glide, changePositionDelta };
+function changeValueTo(params = {}) {
+  const { currentSpriteInfo } = this;
+  const newParams = {};
+
+  Object.keys(params).forEach((key) => {
+    if (!isNaN(params[key])) {
+      newParams[key] = params[key];
+    }
+  });
+
+  return { ...currentSpriteInfo, ...newParams };
+}
+
+function changePositionTo(params = {}) {
+  const { currentSpriteInfo, canvasRef } = this;
+  const goTo = params["selectedPosition"];
+  const mousePosition = params["mousePointer"];
+
+  const newParams = {};
+  if (goTo === "random") {
+    const maxXpos = canvasRef.current.width - currentSpriteInfo.width;
+    const maxYpos = canvasRef.current.height - currentSpriteInfo.height;
+    const xPos = Math.round(Math.random() * maxXpos);
+    const yPos = Math.round(Math.random() * maxYpos);
+    newParams["x"] = xPos;
+    newParams["y"] = yPos;
+  } else if (goTo === "mousepointer") {
+    newParams["x"] = mousePosition.x;
+    newParams["y"] = mousePosition.y;
+  }
+
+  return { ...currentSpriteInfo, ...newParams };
+}
+
+function bounceBack() {
+  const { currentSpriteInfo, canvasRef } = this;
+
+  const newParams = {};
+  const maxXpos = canvasRef.current.width - currentSpriteInfo.width;
+  const maxYpos = canvasRef.current.height - currentSpriteInfo.height;
+  const minXpos = 0;
+  const minYpos = 0;
+  let xPos = currentSpriteInfo.x;
+  let yPos = currentSpriteInfo.y;
+
+  if (xPos < minXpos) xPos = minXpos;
+  else if (xPos > maxXpos) xPos = maxXpos;
+
+  if (yPos < minYpos) yPos = minYpos;
+  else if (yPos > maxYpos) yPos = maxYpos;
+
+  newParams["x"] = xPos;
+  newParams["y"] = yPos;
+
+  return { ...currentSpriteInfo, ...newParams };
+}
+
+const actionModules = {
+  moveNSteps,
+  changeSize,
+  glide,
+  changePositionDelta,
+  changeValueTo,
+  changePositionTo,
+  bounceBack,
+};
 
 export default actionModules;

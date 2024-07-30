@@ -1,20 +1,14 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const MoveSteps = () => {
+const BounceBack = () => {
   const { executeSingleAction } = useGameContext();
 
-  const [steps, setSteps] = useState(10);
-
   const performAction = () => {
-    if (!steps) return;
-
     const currentAction = {
-      action: "moveNSteps",
-      params: {
-        steps,
-      },
+      action: "bounceBack",
+      params: {},
     };
 
     executeSingleAction(currentAction);
@@ -22,10 +16,8 @@ const MoveSteps = () => {
 
   const handleDragStart = (e) => {
     const currentAction = {
-      action: "moveNSteps",
-      params: {
-        steps,
-      },
+      action: "bounceBack",
+      params: {},
     };
     const type = "actionData";
     e.dataTransfer.setData("type", type);
@@ -39,17 +31,9 @@ const MoveSteps = () => {
       draggable
       onDragStart={handleDragStart}
     >
-      <span>Move</span>
-      <input
-        type="number"
-        className="bg-[#fff] text-[#000] w-[36px] rounded-lg text-center hide-arrows focus:outline-none"
-        onClick={(e) => e.stopPropagation()}
-        value={steps}
-        onChange={(e) => setSteps(e.target.value)}
-      />
-      <span>steps</span>
+      <span>If on edge, bounce</span>
     </ActionItemButton>
   );
 };
 
-export default MoveSteps;
+export default BounceBack;

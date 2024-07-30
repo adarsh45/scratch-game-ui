@@ -6,7 +6,6 @@ const FlowVisualizer = () => {
   const { flows, addActionToFlow, changePositionOfFlow } = useFlowsContext();
 
   const handleNewFlowDrop = (e) => {
-    console.log("DROPPED NEW:", e.clientX, e.clientY);
     const position = { x: e.clientX, y: e.clientY };
 
     const dropType = e.dataTransfer.getData("type");
@@ -27,7 +26,7 @@ const FlowVisualizer = () => {
 
   return (
     <div
-      className="text-black bg-white rounded-lg w-[40vw]"
+      className="text-black bg-white rounded-lg w-[35vw]"
       style={{
         height: "calc(100vh - 32px)",
       }}

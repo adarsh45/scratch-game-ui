@@ -6,7 +6,6 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
 
   const handleNewFlowItemDrop = (e) => {
     e.stopPropagation();
-    console.log("DROPPED EXISTING:");
 
     const data = e.dataTransfer.getData("actionData");
     if (!data) return;

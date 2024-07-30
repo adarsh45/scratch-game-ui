@@ -1,20 +1,19 @@
-/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const ChangePositionDelta = ({ changeType = "xDelta" }) => {
+const MoveToAbsolutePosition = () => {
   const { executeSingleAction } = useGameContext();
 
-  const [delta, setDelta] = useState({ xDelta: 0, yDelta: 0, angleDelta: 0 });
+  const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 });
 
   const performAction = () => {
-    if (!(delta.xDelta || delta.yDelta || delta.angleDelta)) return;
+    if (!selectedPosition) return;
 
     const currentAction = {
-      action: "changePositionDelta",
+      action: "changeValueTo",
       params: {
-        ...delta,
+        ...selectedPosition,
       },
     };
 
@@ -23,24 +22,14 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
 
   const handleDragStart = (e) => {
     const currentAction = {
-      action: "changePositionDelta",
+      action: "changeValueTo",
       params: {
-        delta,
+        selectedPosition,
       },
     };
     const type = "actionData";
     e.dataTransfer.setData("type", type);
     e.dataTransfer.setData(type, JSON.stringify(currentAction));
-  };
-
-  const getLabel = (changeType) => {
-    if (changeType === "xDelta") {
-      return "Change x";
-    }
-    if (changeType === "yDelta") {
-      return "Change y";
-    }
-    return "Turn";
   };
 
   return (
@@ -50,19 +39,36 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
       draggable
       onDragStart={handleDragStart}
     >
-      <span>{getLabel(changeType)} by</span>
+      <span>Go to</span>
+      <span>x:&nbsp;</span>
       <input
         type="number"
         className="bg-[#fff] text-[#000] w-[36px] rounded-lg text-center hide-arrows focus:outline-none"
         onClick={(e) => e.stopPropagation()}
-        value={delta[changeType]}
-        onChange={(e) => {
-          const deltaValue = Number(e.target.value);
-          setDelta((prev) => ({ ...prev, [changeType]: deltaValue }));
-        }}
+        value={selectedPosition.x}
+        onChange={(e) =>
+          setSelectedPosition((prev) => ({
+            ...prev,
+            x: Number(e.target.value),
+          }))
+        }
+      />
+
+      <span>y:&nbsp;</span>
+      <input
+        type="number"
+        className="bg-[#fff] text-[#000] w-[36px] rounded-lg text-center hide-arrows focus:outline-none"
+        onClick={(e) => e.stopPropagation()}
+        value={selectedPosition.y}
+        onChange={(e) =>
+          setSelectedPosition((prev) => ({
+            ...prev,
+            y: Number(e.target.value),
+          }))
+        }
       />
     </ActionItemButton>
   );
 };
 
-export default ChangePositionDelta;
+export default MoveToAbsolutePosition;

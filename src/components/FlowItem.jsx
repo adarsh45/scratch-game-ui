@@ -1,8 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useFlowsContext } from "../contexts/useFlowsContext";
-import { getActionLabel } from "../helpers/utils";
+import FlowActionItem from "./FlowActionItem";
 
-const FlowItem = ({ flowId, actions = [], position = {} }) => {
+const FlowItem = ({
+  setShowDeleteZone,
+  flowId,
+  actions = [],
+  position = {},
+}) => {
   const { addActionToFlow, setSelectedFlow, selectedFlow } = useFlowsContext();
 
   const handleNewFlowItemDrop = (e) => {
@@ -11,12 +16,18 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
     const data = e.dataTransfer.getData("actionData");
     if (!data) return;
     const actionData = JSON.parse(data);
+    if (!actionData.id) actionData.id = crypto.randomUUID();
     addActionToFlow(flowId, actionData);
   };
 
   const handleCurrentFlowDragout = (e) => {
     e.dataTransfer.setData("type", "existingFlow");
     e.dataTransfer.setData("flowId", flowId);
+    setShowDeleteZone(true);
+  };
+
+  const handleFlowDragEnd = () => {
+    setShowDeleteZone(false);
   };
 
   const handleSetCurrentFlow = async () => {
@@ -24,9 +35,9 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
   };
 
   return (
-    <button
+    <div
       key={flowId}
-      className={`p-0 flex flex-col items-start flow-container absolute bg-transparent rounded-lg border-black ${
+      className={`p-2 flex flex-col items-start flow-container absolute bg-transparent rounded-lg border-black ${
         selectedFlow?.id === flowId ? "border-2" : "border-0"
       }`}
       style={{
@@ -38,20 +49,18 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
       onDrop={handleNewFlowItemDrop}
       draggable
       onDragStart={handleCurrentFlowDragout}
+      onDragEnd={handleFlowDragEnd}
     >
-      {actions.map((actionData, index) => {
+      {actions.map((actionData) => {
         return (
-          <span
-            className={`
-              rounded-lg text-[12px] p-1 text-white m-0
-              ${actionData.type === "looks" ? "bg-[#855CD6]" : "bg-[#4C97FE]"}`}
-            key={JSON.stringify(actionData) + index}
-          >
-            <span>{getActionLabel(actionData)}</span>
-          </span>
+          <FlowActionItem
+            key={actionData.id}
+            flowId={flowId}
+            actionData={actionData}
+          />
         );
       })}
-    </button>
+    </div>
   );
 };
 

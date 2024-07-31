@@ -1,13 +1,16 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import FlowItem from "./FlowItem";
 import { useFlowsContext } from "../contexts/useFlowsContext";
+import DeleteZone from "./DeleteZone";
 
 const FlowVisualizer = () => {
   const { flows, addActionToFlow, changePositionOfFlow } = useFlowsContext();
 
+  const [showDeleteZone, setShowDeleteZone] = useState(false);
+
   const handleNewFlowDrop = (e) => {
     const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left; //x position within the element.
+    const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const position = { x, y };
 
@@ -20,6 +23,7 @@ const FlowVisualizer = () => {
     if (dropType === "actionData") {
       const data = e.dataTransfer.getData("actionData");
       const actionData = JSON.parse(data);
+      if (!actionData.id) actionData.id = crypto.randomUUID();
       addActionToFlow(crypto.randomUUID(), actionData, position);
     } else if (dropType === "existingFlow") {
       const flowId = e.dataTransfer.getData("flowId");
@@ -29,7 +33,6 @@ const FlowVisualizer = () => {
 
   return (
     <div
-      // key={Math.random()}
       className="relative text-black bg-white rounded-lg w-[35vw]"
       style={{
         height: "calc(100vh - 32px)",
@@ -55,9 +58,15 @@ const FlowVisualizer = () => {
             flowId={flowData.id}
             actions={flowData.actions}
             position={flowData.position}
+            setShowDeleteZone={setShowDeleteZone}
           />
         );
       })}
+
+      <DeleteZone
+        showDeleteZone={showDeleteZone}
+        setShowDeleteZone={setShowDeleteZone}
+      />
     </div>
   );
 };

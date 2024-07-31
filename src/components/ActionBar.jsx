@@ -17,21 +17,23 @@ const ActionBar = () => {
         height: "calc(100vh - 32px)",
       }}
     >
+      <h3 className="text-black">Motion</h3>
       <MoveSteps />
       <ChangePositionDelta changeType="xDelta" />
       <ChangePositionDelta changeType="yDelta" />
       <ChangePositionDelta changeType="angleDelta" />
-      <SizeDelta />
       <MoveToPosition />
       <MoveToAbsolutePosition />
       <SetSingleValue changeType="x" />
       <SetSingleValue changeType="y" />
       <SetSingleValue changeType="angle" />
       <BounceBack />
-      <DrawMessage type="say" />
-      <DrawMessage type="say" timerAvailable={false} />
-      <DrawMessage type="think" />
-      <DrawMessage type="think" timerAvailable={false} />
+      <h3 className="text-black">Looks</h3>
+      <SizeDelta />
+      <DrawMessage msgType="say" />
+      <DrawMessage msgType="say" timerAvailable={false} />
+      <DrawMessage msgType="think" />
+      <DrawMessage msgType="think" timerAvailable={false} />
       <SpriteVisibility show={true} />
       <SpriteVisibility show={false} />
     </div>

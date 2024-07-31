@@ -9,10 +9,10 @@ function App() {
   return (
     <main className="w-full h-full flex flex-row items-start justify-between p-4">
       <GameContextProvider>
-        <section className="h-full">
-          <ActionBar />
-        </section>
         <FlowsContextProvider>
+          <section className="h-full">
+            <ActionBar />
+          </section>
           <section className="h-full">
             <FlowVisualizer />
           </section>

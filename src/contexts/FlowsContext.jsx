@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 export const FlowsContext = createContext();
 
@@ -38,6 +37,46 @@ export const FlowsContextProvider = ({ children }) => {
     });
   }, []);
 
+  const changeActionParamsInFlow = useCallback(
+    (flowId, actionId, newParams = {}) => {
+      setFlows((prevFlows) => {
+        const existingFlow = prevFlows.find((flow) => flow.id === flowId);
+
+        if (!existingFlow) return;
+
+        const newActions = (existingFlow.actions || []).map((action) => {
+          if (action.id === actionId) {
+            return { ...action, params: newParams };
+          }
+          return action;
+        });
+
+        return prevFlows.map((flow) => {
+          if (flow.id === flowId) {
+            return { ...flow, actions: newActions };
+          }
+          return flow;
+        });
+      });
+    },
+    []
+  );
+
+  const handleFlowDelete = useCallback((flowId) => {
+    setFlows((prevFlows) => {
+      return prevFlows.filter((flow) => flow.id !== flowId);
+    });
+  }, []);
+
+  useEffect(() => {
+    flows.forEach((flowData) => {
+      if (flowData.id === selectedFlow?.id) {
+        setSelectedFlow(flowData);
+        return;
+      }
+    });
+  }, [flows]);
+
   return (
     <FlowsContext.Provider
       value={{
@@ -47,6 +86,8 @@ export const FlowsContextProvider = ({ children }) => {
         setFlows,
         addActionToFlow,
         changePositionOfFlow,
+        changeActionParamsInFlow,
+        handleFlowDelete,
       }}
     >
       {children}

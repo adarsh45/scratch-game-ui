@@ -1,4 +1,5 @@
 import { useFlowsContext } from "../contexts/useFlowsContext";
+import DeleteIcon from "../assets/bin-icon.svg";
 
 const DeleteZone = ({ showDeleteZone, setShowDeleteZone }) => {
   const { handleFlowDelete } = useFlowsContext();
@@ -20,9 +21,9 @@ const DeleteZone = ({ showDeleteZone, setShowDeleteZone }) => {
       <button
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDeleteFlow}
-        className="rounded-full text-white bg-red-600 opacity-80 p-[36px] absolute bottom-0 right-0 w-[150px] h-[150px] flex flex-row items-center justify-center"
+        className="rounded-full text-white bg-red-600 opacity-60 p-[36px] absolute bottom-0 right-0 w-[150px] h-[150px] flex flex-row items-center justify-center"
       >
-        Delete
+        <img src={DeleteIcon} alt="delete" width={40} height={40} />
       </button>
     )
   );

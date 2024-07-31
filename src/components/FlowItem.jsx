@@ -2,7 +2,12 @@
 import { useFlowsContext } from "../contexts/useFlowsContext";
 import FlowActionItem from "./FlowActionItem";
 
-const FlowItem = ({ flowId, actions = [], position = {} }) => {
+const FlowItem = ({
+  setShowDeleteZone,
+  flowId,
+  actions = [],
+  position = {},
+}) => {
   const { addActionToFlow, setSelectedFlow, selectedFlow } = useFlowsContext();
 
   const handleNewFlowItemDrop = (e) => {
@@ -18,6 +23,11 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
   const handleCurrentFlowDragout = (e) => {
     e.dataTransfer.setData("type", "existingFlow");
     e.dataTransfer.setData("flowId", flowId);
+    setShowDeleteZone(true);
+  };
+
+  const handleFlowDragEnd = () => {
+    setShowDeleteZone(false);
   };
 
   const handleSetCurrentFlow = async () => {
@@ -39,6 +49,7 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
       onDrop={handleNewFlowItemDrop}
       draggable
       onDragStart={handleCurrentFlowDragout}
+      onDragEnd={handleFlowDragEnd}
     >
       {actions.map((actionData) => {
         return (

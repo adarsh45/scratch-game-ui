@@ -62,6 +62,12 @@ export const FlowsContextProvider = ({ children }) => {
     []
   );
 
+  const handleFlowDelete = useCallback((flowId) => {
+    setFlows((prevFlows) => {
+      return prevFlows.filter((flow) => flow.id !== flowId);
+    });
+  }, []);
+
   useEffect(() => {
     flows.forEach((flowData) => {
       if (flowData.id === selectedFlow?.id) {
@@ -81,6 +87,7 @@ export const FlowsContextProvider = ({ children }) => {
         addActionToFlow,
         changePositionOfFlow,
         changeActionParamsInFlow,
+        handleFlowDelete,
       }}
     >
       {children}

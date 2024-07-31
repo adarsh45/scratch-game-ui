@@ -17,6 +17,7 @@ const ActionBar = () => {
         height: "calc(100vh - 32px)",
       }}
     >
+      <h3 className="text-black">Motion</h3>
       <MoveSteps />
       <ChangePositionDelta changeType="xDelta" />
       <ChangePositionDelta changeType="yDelta" />
@@ -27,6 +28,7 @@ const ActionBar = () => {
       <SetSingleValue changeType="y" />
       <SetSingleValue changeType="angle" />
       <BounceBack />
+      <h3 className="text-black">Looks</h3>
       <SizeDelta />
       <DrawMessage msgType="say" />
       <DrawMessage msgType="say" timerAvailable={false} />

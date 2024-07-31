@@ -1,13 +1,16 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import FlowItem from "./FlowItem";
 import { useFlowsContext } from "../contexts/useFlowsContext";
+import DeleteZone from "./DeleteZone";
 
 const FlowVisualizer = () => {
   const { flows, addActionToFlow, changePositionOfFlow } = useFlowsContext();
 
+  const [showDeleteZone, setShowDeleteZone] = useState(false);
+
   const handleNewFlowDrop = (e) => {
     const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left; //x position within the element.
+    const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const position = { x, y };
 
@@ -55,9 +58,15 @@ const FlowVisualizer = () => {
             flowId={flowData.id}
             actions={flowData.actions}
             position={flowData.position}
+            setShowDeleteZone={setShowDeleteZone}
           />
         );
       })}
+
+      <DeleteZone
+        showDeleteZone={showDeleteZone}
+        setShowDeleteZone={setShowDeleteZone}
+      />
     </div>
   );
 };

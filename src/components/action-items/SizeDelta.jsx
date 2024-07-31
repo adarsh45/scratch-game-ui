@@ -21,7 +21,7 @@ const SizeDelta = ({
     changeActionParamsInFlow(flowId, actionId, newParams);
   }, [sizeDelta]);
 
-  const addActionToFlow = () => {
+  const performAction = () => {
     if (!sizeDelta) return;
 
     const currentAction = {
@@ -49,8 +49,8 @@ const SizeDelta = ({
   return (
     <ActionItemButton
       className="bg-[#855CD6]"
-      onClick={addActionToFlow}
-      disabled={role === "flow"}
+      // bubble event to parent if role is flow
+      onClick={role === "flow" ? () => {} : performAction}
       draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >

@@ -31,8 +31,8 @@ const SpriteVisibility = ({ role = "action", show = true }) => {
   return (
     <ActionItemButton
       className="bg-[#855CD6]"
-      onClick={performAction}
-      disabled={role === "flow"}
+      // bubble event to parent if role is flow
+      onClick={role === "flow" ? () => {} : performAction}
       draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >

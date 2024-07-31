@@ -27,7 +27,7 @@ const FlowItem = ({ flowId, actions = [], position = {} }) => {
   return (
     <div
       key={flowId}
-      className={`p-0 flex flex-col items-start flow-container absolute bg-transparent rounded-lg border-black ${
+      className={`p-2 flex flex-col items-start flow-container absolute bg-transparent rounded-lg border-black ${
         selectedFlow?.id === flowId ? "border-2" : "border-0"
       }`}
       style={{

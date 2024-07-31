@@ -28,8 +28,8 @@ const BounceBack = ({ role = "action" }) => {
   return (
     <ActionItemButton
       className="bg-[#4C97FE]"
-      onClick={performAction}
-      disabled={role === "flow"}
+      // bubble event to parent if role is flow
+      onClick={role === "flow" ? () => {} : performAction}
       draggable={role === "action"}
       onDragStart={handleDragStart}
     >

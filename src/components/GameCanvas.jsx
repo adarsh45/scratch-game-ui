@@ -14,7 +14,6 @@ const GameCanvas = () => {
     setIsDragging,
     dragOffset,
     setDragOffset,
-    setMousePointer,
     looksData,
     setLooksData,
   } = useGameContext();
@@ -156,10 +155,6 @@ const GameCanvas = () => {
     }
   }, [image, spriteInfo, looksData.show]);
 
-  function recordMousePointer(e) {
-    setMousePointer({ x: e.clientX, y: e.clientY });
-  }
-
   useEffect(() => {
     // change canvas height and width
     canvasRef.current.width = document.documentElement.clientWidth * 0.4;
@@ -183,13 +178,6 @@ const GameCanvas = () => {
         x: midX,
         y: midY,
       }));
-    };
-    // record mouse pointer
-
-    document.body.addEventListener("mousemove", recordMousePointer);
-
-    return () => {
-      document.body.removeEventListener("mousemove", recordMousePointer);
     };
   }, []);
 

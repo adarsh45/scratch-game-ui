@@ -25,7 +25,7 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
     const currentAction = {
       action: "changePositionDelta",
       params: {
-        delta,
+        ...delta,
       },
     };
     const type = "actionData";

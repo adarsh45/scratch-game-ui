@@ -6,7 +6,10 @@ const FlowVisualizer = () => {
   const { flows, addActionToFlow, changePositionOfFlow } = useFlowsContext();
 
   const handleNewFlowDrop = (e) => {
-    const position = { x: e.clientX, y: e.clientY };
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX - rect.left; //x position within the element.
+    const y = e.clientY - rect.top;
+    const position = { x, y };
 
     const dropType = e.dataTransfer.getData("type");
     if (!dropType) {
@@ -26,13 +29,25 @@ const FlowVisualizer = () => {
 
   return (
     <div
-      className="text-black bg-white rounded-lg w-[35vw]"
+      // key={Math.random()}
+      className="relative text-black bg-white rounded-lg w-[35vw]"
       style={{
         height: "calc(100vh - 32px)",
       }}
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleNewFlowDrop}
     >
+      {flows.length === 0 && (
+        <span
+          className="text-center text-gray-400 absolute top-[50%] left-[50%]"
+          style={{
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          Drag and drop the actions from left here, then select and run them in
+          sequence
+        </span>
+      )}
       {flows.map((flowData) => {
         return (
           <FlowItem

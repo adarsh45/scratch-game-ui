@@ -2,16 +2,14 @@
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const SpriteVisibility = () => {
+const SpriteVisibility = ({ show = true }) => {
   const { executeSingleAction } = useGameContext();
 
   const performAction = () => {
     const currentAction = {
       type: "looks",
       action: "spriteVisibility",
-      params: {
-        show: false,
-      },
+      params: { show },
     };
 
     executeSingleAction(currentAction);
@@ -22,7 +20,7 @@ const SpriteVisibility = () => {
       type: "looks",
       action: "spriteVisibility",
       params: {
-        show: false,
+        show,
       },
     };
     const type = "actionData";
@@ -37,8 +35,7 @@ const SpriteVisibility = () => {
       draggable
       onDragStart={handleDragStart}
     >
-      <input type="checkbox" value="show" id="show-sprite" />{" "}
-      <label htmlFor="show-sprite">Show</label>
+      <span>{show ? "show" : "hide"}</span>
     </ActionItemButton>
   );
 };

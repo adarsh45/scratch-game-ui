@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useGameContext } from "../contexts/useGameContext";
 import catSprite from "../assets/catsprite.svg";
+import ExecuteFlow from "./ExecuteFlow";
 
 const GameCanvas = () => {
   const {
@@ -26,6 +27,15 @@ const GameCanvas = () => {
     context.rotate((angle * Math.PI) / 180);
     context.drawImage(image, -width / 2, -height / 2, width, height);
     context.restore();
+  };
+
+  const clearSpriteDrawing = (context, spriteInfo) => {
+    const { x, y, width, height } = spriteInfo;
+    // context.save();
+    // context.translate(x + width / 2, y + height / 2);
+    // context.rotate((angle * Math.PI) / 180);
+    context.clearRect(x, y, width, height);
+    // context.restore();
   };
 
   const drawMessage = (context, startPosition, looksData) => {
@@ -134,6 +144,18 @@ const GameCanvas = () => {
     };
   }, [image, spriteInfo, looksData]);
 
+  useEffect(() => {
+    if (!image) return;
+    const ctx = canvasRef.current.getContext("2d");
+
+    const showSprite = looksData.show;
+    if (!showSprite) {
+      clearSpriteDrawing(ctx, spriteInfo);
+    } else {
+      drawSprite(ctx, image, spriteInfo);
+    }
+  }, [image, spriteInfo, looksData.show]);
+
   function recordMousePointer(e) {
     setMousePointer({ x: e.clientX, y: e.clientY });
   }
@@ -151,13 +173,17 @@ const GameCanvas = () => {
 
     img.onload = () => {
       setImage(img);
+      const midX = canvasRef.current.width / 2 - img.width / 2;
+      const midY = canvasRef.current.height / 2 - img.height / 2;
+
       setSpriteInfo((prev) => ({
         ...prev,
         width: img.width,
         height: img.height,
+        x: midX,
+        y: midY,
       }));
     };
-
     // record mouse pointer
 
     document.body.addEventListener("mousemove", recordMousePointer);
@@ -168,7 +194,8 @@ const GameCanvas = () => {
   }, []);
 
   return (
-    <div>
+    <div className="relative">
+      <ExecuteFlow />
       <canvas
         ref={canvasRef}
         className="bg-[#fff] rounded-md"

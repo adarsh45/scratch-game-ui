@@ -25,9 +25,16 @@ export const GameContextProvider = ({ children }) => {
     show: true,
   });
 
-  const [flows, setFlows] = useState([{ actions: [] }]);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+
+  const executeSingleFlow = useCallback(async (flowData) => {
+    const actions = flowData.actions;
+    for (const actionData of actions) {
+      executeSingleAction(actionData);
+      await new Promise((res) => setTimeout(res, 500));
+    }
+  }, []);
 
   const executeSingleAction = useCallback((actionData = {}) => {
     switch (actionData.type) {
@@ -57,11 +64,12 @@ export const GameContextProvider = ({ children }) => {
   };
 
   const handleLooks = (actionData) => {
-    const contextData = {
-      spriteInfo,
-      canvasRef,
-    };
     setLooksData((currentLooks) => {
+      const contextData = {
+        spriteInfo,
+        canvasRef,
+        currentLooks,
+      };
       const module = looksModules[actionData.action];
       const params = { ...actionData.params };
       const updatedLooks = module.call(contextData, params);
@@ -69,22 +77,6 @@ export const GameContextProvider = ({ children }) => {
       return { ...currentLooks, ...updatedLooks };
     });
   };
-
-  const addActionToFlow = useCallback((flowId, actionData) => {
-    setFlows((prevFlows) => {
-      const existingFlow = prevFlows.find((flow) => flow.id === flowId);
-
-      if (existingFlow) {
-        return prevFlows.map((flow) =>
-          flow.id === flowId
-            ? { ...flow, actions: [...flow.actions, actionData] }
-            : flow
-        );
-      } else {
-        return [...prevFlows, { id: flowId, actions: [actionData] }];
-      }
-    });
-  }, []);
 
   return (
     <GameContext.Provider
@@ -94,18 +86,16 @@ export const GameContextProvider = ({ children }) => {
         setImage,
         spriteInfo,
         setSpriteInfo,
-        flows,
-        setFlows,
         isDragging,
         setIsDragging,
         dragOffset,
         setDragOffset,
         executeSingleAction,
-        addActionToFlow,
         mousePointer,
         setMousePointer,
         looksData,
         setLooksData,
+        executeSingleFlow,
       }}
     >
       {children}

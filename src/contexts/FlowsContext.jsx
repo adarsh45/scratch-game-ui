@@ -3,61 +3,9 @@ import { createContext, useCallback, useState } from "react";
 
 export const FlowsContext = createContext();
 
-export const DEFAULT_FLOWS = [
-  {
-    actions: [
-      {
-        action: "moveNSteps",
-        params: {
-          steps: 25,
-        },
-      },
-      {
-        action: "moveNSteps",
-        params: {
-          steps: 100,
-        },
-      },
-      {
-        action: "moveNSteps",
-        params: {
-          steps: 25,
-        },
-      },
-      {
-        action: "changeSize",
-        params: {
-          sizeDelta: 100,
-        },
-      },
-
-      {
-        action: "changePositionDelta",
-        params: {
-          angleDelta: 30,
-        },
-      },
-
-      {
-        action: "changePositionDelta",
-        params: {
-          xDelta: -100,
-          yDelta: 300,
-        },
-      },
-      // {
-      //   action: "glide",
-      //   params: {
-      //     endX: 100,
-      //     endY: 200,
-      //   },
-      // },
-    ],
-  },
-];
-
 export const FlowsContextProvider = ({ children }) => {
-  const [flows, setFlows] = useState([{ actions: [] }]);
+  const [flows, setFlows] = useState([]);
+  const [selectedFlow, setSelectedFlow] = useState(null);
 
   const addActionToFlow = useCallback((flowId, actionData, position) => {
     setFlows((prevFlows) => {
@@ -93,6 +41,8 @@ export const FlowsContextProvider = ({ children }) => {
   return (
     <FlowsContext.Provider
       value={{
+        selectedFlow,
+        setSelectedFlow,
         flows,
         setFlows,
         addActionToFlow,

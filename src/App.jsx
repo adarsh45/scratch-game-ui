@@ -12,14 +12,14 @@ function App() {
         <section className="h-full">
           <ActionBar />
         </section>
-        <section className="h-full">
-          <FlowsContextProvider>
+        <FlowsContextProvider>
+          <section className="h-full">
             <FlowVisualizer />
-          </FlowsContextProvider>
-        </section>
-        <section className="h-full">
-          <GameCanvas />
-        </section>
+          </section>
+          <section className="h-full">
+            <GameCanvas />
+          </section>
+        </FlowsContextProvider>
       </GameContextProvider>
     </main>
   );

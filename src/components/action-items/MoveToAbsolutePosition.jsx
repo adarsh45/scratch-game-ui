@@ -24,7 +24,7 @@ const MoveToAbsolutePosition = () => {
     const currentAction = {
       action: "changeValueTo",
       params: {
-        selectedPosition,
+        ...selectedPosition,
       },
     };
     const type = "actionData";

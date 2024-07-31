@@ -1,4 +1,3 @@
-import { useGameContext } from "../contexts/useGameContext";
 import BounceBack from "./action-items/BounceBack";
 import ChangePositionDelta from "./action-items/ChangePositionDelta";
 import MoveSteps from "./action-items/MoveSteps";
@@ -10,32 +9,14 @@ import DrawMessage from "./looks-items/DrawMessage";
 import SpriteVisibility from "./looks-items/SpriteVisibility";
 
 const ActionBar = () => {
-  const { flows, executeSingleAction } = useGameContext();
-
-  async function executeFlow(flow = {}) {
-    for (const item of flow.actions) {
-      executeSingleAction(item);
-      // this is not in original game, for better viewing, added time delay
-      await new Promise((res) => setTimeout(res, 400));
-    }
-  }
-
-  function handleRun() {
-    if (!flows.length) return;
-
-    const selectedFlow = flows[0];
-
-    executeFlow(selectedFlow);
-  }
-
   return (
     <div
-      className="bg-[#fff] rounded-md overflow-y-auto p-4 h-full flex flex-col items-start justify-center gap-4 w-[20vw]"
+      className="bg-[#fff] rounded-md overflow-y-auto p-4 h-full flex flex-col items-start justify-start gap-4 w-[20vw]"
       style={{
         maxHeight: "calc(100vh - 32px)",
+        height: "calc(100vh - 32px)",
       }}
     >
-      <button onClick={handleRun}>Run</button>
       <MoveSteps />
       <ChangePositionDelta changeType="xDelta" />
       <ChangePositionDelta changeType="yDelta" />
@@ -51,7 +32,8 @@ const ActionBar = () => {
       <DrawMessage type="say" timerAvailable={false} />
       <DrawMessage type="think" />
       <DrawMessage type="think" timerAvailable={false} />
-      <SpriteVisibility />
+      <SpriteVisibility show={true} />
+      <SpriteVisibility show={false} />
     </div>
   );
 };

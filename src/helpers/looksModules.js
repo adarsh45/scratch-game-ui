@@ -3,7 +3,7 @@ function showMessage(params = {}) {
 }
 
 function spriteVisibility(params = {}) {
-  return params;
+  return { show: params.show };
 }
 
 const looksModules = { showMessage, spriteVisibility };

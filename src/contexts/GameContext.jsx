@@ -9,7 +9,6 @@ export const GameContextProvider = ({ children }) => {
   const canvasRef = useRef(null);
 
   const [image, setImage] = useState(null);
-  const [mousePointer, setMousePointer] = useState({ x: 0, y: 0 });
   const [spriteInfo, setSpriteInfo] = useState({
     x: 0,
     y: 0,
@@ -52,7 +51,7 @@ export const GameContextProvider = ({ children }) => {
   const handleMotion = (actionData) => {
     setSpriteInfo((currentSpriteInfo) => {
       const module = actionModules[actionData.action];
-      const params = { ...actionData.params, mousePointer };
+      const params = { ...actionData.params };
 
       const updatedSprite = module.call(
         { currentSpriteInfo, canvasRef },
@@ -91,8 +90,6 @@ export const GameContextProvider = ({ children }) => {
         dragOffset,
         setDragOffset,
         executeSingleAction,
-        mousePointer,
-        setMousePointer,
         looksData,
         setLooksData,
         executeSingleFlow,

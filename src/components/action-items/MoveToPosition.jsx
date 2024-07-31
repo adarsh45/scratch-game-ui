@@ -47,7 +47,6 @@ const MoveToPosition = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <option value="random">Random position</option>
-        <option value="mousepointer">Mouse pointer</option>
       </select>
     </ActionItemButton>
   );

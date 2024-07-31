@@ -96,7 +96,6 @@ function changeValueTo(params = {}) {
 function changePositionTo(params = {}) {
   const { currentSpriteInfo, canvasRef } = this;
   const goTo = params["selectedPosition"];
-  const mousePosition = params["mousePointer"];
 
   const newParams = {};
   if (goTo === "random") {
@@ -106,9 +105,6 @@ function changePositionTo(params = {}) {
     const yPos = Math.round(Math.random() * maxYpos);
     newParams["x"] = xPos;
     newParams["y"] = yPos;
-  } else if (goTo === "mousepointer") {
-    newParams["x"] = mousePosition.x;
-    newParams["y"] = mousePosition.y;
   }
 
   return { ...currentSpriteInfo, ...newParams };

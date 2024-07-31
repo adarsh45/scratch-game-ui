@@ -14,7 +14,6 @@ const GameCanvas = () => {
     setIsDragging,
     dragOffset,
     setDragOffset,
-    setMousePointer,
     looksData,
     setLooksData,
   } = useGameContext();
@@ -30,12 +29,19 @@ const GameCanvas = () => {
   };
 
   const clearSpriteDrawing = (context, spriteInfo) => {
-    const { x, y, width, height } = spriteInfo;
-    // context.save();
-    // context.translate(x + width / 2, y + height / 2);
-    // context.rotate((angle * Math.PI) / 180);
-    context.clearRect(x, y, width, height);
-    // context.restore();
+    const { x, y, width, height, angle } = spriteInfo;
+    context.save();
+    context.translate(x + width / 2, y + height / 2);
+    context.rotate(angle);
+
+    const addFactor = 22;
+    context.clearRect(
+      -((width + addFactor) / 2),
+      -((height + addFactor) / 2),
+      width + addFactor,
+      height + addFactor
+    );
+    context.restore();
   };
 
   const drawMessage = (context, startPosition, looksData) => {
@@ -156,10 +162,6 @@ const GameCanvas = () => {
     }
   }, [image, spriteInfo, looksData.show]);
 
-  function recordMousePointer(e) {
-    setMousePointer({ x: e.clientX, y: e.clientY });
-  }
-
   useEffect(() => {
     // change canvas height and width
     canvasRef.current.width = document.documentElement.clientWidth * 0.4;
@@ -183,13 +185,6 @@ const GameCanvas = () => {
         x: midX,
         y: midY,
       }));
-    };
-    // record mouse pointer
-
-    document.body.addEventListener("mousemove", recordMousePointer);
-
-    return () => {
-      document.body.removeEventListener("mousemove", recordMousePointer);
     };
   }, []);
 

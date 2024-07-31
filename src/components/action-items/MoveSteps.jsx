@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
+import { useFlowsContext } from "../../contexts/useFlowsContext";
 
-const MoveSteps = () => {
+const MoveSteps = ({
+  flowId,
+  actionId,
+  actionParams = {},
+  role = "action",
+}) => {
   const { executeSingleAction } = useGameContext();
+  const { changeActionParamsInFlow } = useFlowsContext();
 
-  const [steps, setSteps] = useState(10);
+  const [steps, setSteps] = useState(actionParams.steps ?? 10);
+
+  useEffect(() => {
+    if (role !== "flow") return;
+
+    const newParams = { ...actionParams, steps: Number(steps) };
+    changeActionParamsInFlow(flowId, actionId, newParams);
+  }, [steps]);
 
   const performAction = () => {
     if (!steps) return;
@@ -36,7 +50,8 @@ const MoveSteps = () => {
     <ActionItemButton
       className="bg-[#4C97FE]"
       onClick={performAction}
-      draggable
+      disabled={role === "flow"}
+      draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >
       <span>Move</span>

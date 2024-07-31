@@ -1,13 +1,28 @@
-/* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
+import { useFlowsContext } from "../../contexts/useFlowsContext";
 
-const DrawMessage = ({ type = "say", timerAvailable = true }) => {
+const DrawMessage = ({
+  flowId,
+  actionId,
+  actionParams = {},
+  role = "action",
+  msgType = "say",
+  timerAvailable = true,
+}) => {
   const { executeSingleAction } = useGameContext();
+  const { changeActionParamsInFlow } = useFlowsContext();
 
   const [msg, setMsg] = useState("hello");
   const [time, setTime] = useState(2);
+
+  useEffect(() => {
+    if (role !== "flow") return;
+
+    const newParams = { ...actionParams, msg, time };
+    changeActionParamsInFlow(flowId, actionId, newParams);
+  }, [msg, time]);
 
   const performAction = () => {
     if (!msg) return;
@@ -19,6 +34,7 @@ const DrawMessage = ({ type = "say", timerAvailable = true }) => {
         timerAvailable,
         msg,
         time,
+        msgType,
       },
     };
 
@@ -33,6 +49,7 @@ const DrawMessage = ({ type = "say", timerAvailable = true }) => {
         timerAvailable,
         msg,
         time,
+        msgType,
       },
     };
     const type = "actionData";
@@ -44,10 +61,11 @@ const DrawMessage = ({ type = "say", timerAvailable = true }) => {
     <ActionItemButton
       className="bg-[#855CD6]"
       onClick={performAction}
-      draggable
+      disabled={role === "flow"}
+      draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >
-      <span>{type}</span>
+      <span>{msgType}</span>
       <input
         type="text"
         className="bg-[#fff] text-[#000] w-[36px] rounded-lg text-center hide-arrows focus:outline-none"

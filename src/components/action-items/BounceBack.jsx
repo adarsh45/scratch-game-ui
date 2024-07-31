@@ -2,7 +2,8 @@
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const BounceBack = () => {
+// role = action | flow
+const BounceBack = ({ role = "action" }) => {
   const { executeSingleAction } = useGameContext();
 
   const performAction = () => {
@@ -28,7 +29,8 @@ const BounceBack = () => {
     <ActionItemButton
       className="bg-[#4C97FE]"
       onClick={performAction}
-      draggable
+      disabled={role === "flow"}
+      draggable={role === "action"}
       onDragStart={handleDragStart}
     >
       <span>If on edge, bounce</span>

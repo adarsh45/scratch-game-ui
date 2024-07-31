@@ -2,7 +2,7 @@
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
 
-const SpriteVisibility = ({ show = true }) => {
+const SpriteVisibility = ({ role = "action", show = true }) => {
   const { executeSingleAction } = useGameContext();
 
   const performAction = () => {
@@ -32,7 +32,8 @@ const SpriteVisibility = ({ show = true }) => {
     <ActionItemButton
       className="bg-[#855CD6]"
       onClick={performAction}
-      draggable
+      disabled={role === "flow"}
+      draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >
       <span>{show ? "show" : "hide"}</span>

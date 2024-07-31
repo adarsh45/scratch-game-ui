@@ -1,12 +1,28 @@
-/* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
+import { useFlowsContext } from "../../contexts/useFlowsContext";
 
-const ChangePositionDelta = ({ changeType = "xDelta" }) => {
+const ChangePositionDelta = ({
+  flowId,
+  actionId,
+  actionParams = {},
+  role = "action",
+  changeType = "xDelta",
+}) => {
   const { executeSingleAction } = useGameContext();
+  const { changeActionParamsInFlow } = useFlowsContext();
 
-  const [delta, setDelta] = useState({ xDelta: 0, yDelta: 0, angleDelta: 0 });
+  const [delta, setDelta] = useState({
+    [changeType]: actionParams[changeType] ?? 0,
+  });
+
+  useEffect(() => {
+    if (role !== "flow") return;
+
+    const newParams = { ...actionParams, ...delta };
+    changeActionParamsInFlow(flowId, actionId, newParams);
+  }, [delta]);
 
   const performAction = () => {
     if (!(delta.xDelta || delta.yDelta || delta.angleDelta)) return;
@@ -47,7 +63,8 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
     <ActionItemButton
       className="bg-[#4C97FE]"
       onClick={performAction}
-      draggable
+      disabled={role === "flow"}
+      draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >
       <span>{getLabel(changeType)} by</span>
@@ -58,7 +75,7 @@ const ChangePositionDelta = ({ changeType = "xDelta" }) => {
         value={delta[changeType]}
         onChange={(e) => {
           const deltaValue = Number(e.target.value);
-          setDelta((prev) => ({ ...prev, [changeType]: deltaValue }));
+          setDelta({ [changeType]: deltaValue });
         }}
       />
     </ActionItemButton>

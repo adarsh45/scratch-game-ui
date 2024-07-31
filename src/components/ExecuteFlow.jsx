@@ -9,7 +9,9 @@ const ExecuteFlow = () => {
       <button
         className={`${selectedFlow ? "" : "cursor-not-allowed opacity-50"}`}
         disabled={!selectedFlow}
-        onClick={() => executeSingleFlow(selectedFlow)}
+        onClick={() => {
+          executeSingleFlow(selectedFlow);
+        }}
       >
         Run
       </button>

@@ -20,6 +20,7 @@ const FlowVisualizer = () => {
     if (dropType === "actionData") {
       const data = e.dataTransfer.getData("actionData");
       const actionData = JSON.parse(data);
+      if (!actionData.id) actionData.id = crypto.randomUUID();
       addActionToFlow(crypto.randomUUID(), actionData, position);
     } else if (dropType === "existingFlow") {
       const flowId = e.dataTransfer.getData("flowId");
@@ -29,7 +30,6 @@ const FlowVisualizer = () => {
 
   return (
     <div
-      // key={Math.random()}
       className="relative text-black bg-white rounded-lg w-[35vw]"
       style={{
         height: "calc(100vh - 32px)",

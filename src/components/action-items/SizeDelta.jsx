@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameContext } from "../../contexts/useGameContext";
 import ActionItemButton from "../ActionItemButton";
+import { useFlowsContext } from "../../contexts/useFlowsContext";
 
-const SizeDelta = () => {
+const SizeDelta = ({
+  flowId,
+  actionId,
+  actionParams = {},
+  role = "action",
+}) => {
   const { executeSingleAction } = useGameContext();
+  const { changeActionParamsInFlow } = useFlowsContext();
 
-  const [sizeDelta, setSizeDelta] = useState(10);
+  const [sizeDelta, setSizeDelta] = useState(actionParams.sizeDelta ?? 10);
+
+  useEffect(() => {
+    if (role !== "flow") return;
+
+    const newParams = { ...actionParams, sizeDelta: Number(sizeDelta) };
+    changeActionParamsInFlow(flowId, actionId, newParams);
+  }, [sizeDelta]);
 
   const addActionToFlow = () => {
     if (!sizeDelta) return;
@@ -34,9 +48,10 @@ const SizeDelta = () => {
 
   return (
     <ActionItemButton
-      className="bg-[#4C97FE]"
+      className="bg-[#855CD6]"
       onClick={addActionToFlow}
-      draggable
+      disabled={role === "flow"}
+      draggable={role !== "flow"}
       onDragStart={handleDragStart}
     >
       <span>Change size by </span>

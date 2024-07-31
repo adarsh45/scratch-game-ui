@@ -29,12 +29,19 @@ const GameCanvas = () => {
   };
 
   const clearSpriteDrawing = (context, spriteInfo) => {
-    const { x, y, width, height } = spriteInfo;
-    // context.save();
-    // context.translate(x + width / 2, y + height / 2);
-    // context.rotate((angle * Math.PI) / 180);
-    context.clearRect(x, y, width, height);
-    // context.restore();
+    const { x, y, width, height, angle } = spriteInfo;
+    context.save();
+    context.translate(x + width / 2, y + height / 2);
+    context.rotate(angle);
+
+    const addFactor = 22;
+    context.clearRect(
+      -((width + addFactor) / 2),
+      -((height + addFactor) / 2),
+      width + addFactor,
+      height + addFactor
+    );
+    context.restore();
   };
 
   const drawMessage = (context, startPosition, looksData) => {
